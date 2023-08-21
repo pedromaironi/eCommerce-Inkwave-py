@@ -31,39 +31,8 @@ class Clicks:
             click_rates_data = self.db_connection.execute_query(
                 query, id_client)
 
-            # Calculate click rates
-            user_click_rates = {}  # Dictionary to store user's product click rates
-            for user_id, product_id, total_clicks in click_rates_data:
-                if user_id not in user_click_rates:
-                    user_click_rates[user_id] = {}
-                user_click_rates[user_id][product_id] = total_clicks
-
             # Now you have a nested dictionary 'user_click_rates' that maps user IDs to product click rates
-            return user_click_rates
+            return click_rates_data
 
         except Exception as e:
             print("Error:", e)
-
-    def create_product_profiles(self, id_client):
-        try:
-            all_click_rates = self.clicks_instance.calculate_click_rates()
-
-            # Si tienes otros atributos relevantes, obtenerlos de manera similar
-
-            # Crear perfiles de productos
-            product_profiles = []
-            for product_id, click_rates in all_click_rates.items():
-                # Crear un diccionario para el perfil del producto
-                product_profile = {
-                    "product_id": product_id,
-                    "clicks": click_rates,
-                    # Agregar otros atributos relevantes al diccionario
-                }
-                product_profiles.append(product_profile)
-
-            return product_profiles
-        except Exception as e:
-            print("Error:", e)
-
-    def close_connection(self):
-        self.db_connection.close()

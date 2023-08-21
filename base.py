@@ -19,7 +19,7 @@ class DatabaseConnection:
 
     def _create_connection(self):
         try:
-            conn_str = f'DRIVER=SQL Server;SERVER={self.server};DATABASE={self.database};UID={self.username};PWD={self.password}'
+            conn_str = f'DRIVER=SQL Server;SERVER={self.server};DATABASE={self.database};UID={self.username};PWD={self.password};charset=UTF-8'
             return pyodbc.connect(conn_str)
         except pyodbc.Error as e:
             # Lanza un error personalizado
