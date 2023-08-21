@@ -13,24 +13,26 @@ def main(id_client):
         click_instance = Clicks()
         client_instance = Client()
 
-        product_profiles = product_instance.create_product_profiles(id_client)
-        click_rates = click_instance.calculate_click_rates(id_client)
+        # product_profiles = product_instance.create_product_profiles(id_client)
+        # click_rates = click_instance.calculate_click_rates(id_client)
 
-        client_info = client_instance.get_client_info(id_client)
-        user_gender = client_info["genero"]
-        user_age = client_info['edad']
-        user_style_preference = client_info["estilo_preferido"]
-        user_color_preference = client_info["color_preferido"]
-        user_brand_preference = client_info["marcas_favoritas"]
-        user_size_preference = client_info["talla"]
+        # client_info = client_instance.get_client_info(id_client)
+        # user_gender = client_info["genero"]
+        # user_age = client_info['edad']
+        # user_style_preference = client_info["estilo_preferido"]
+        # user_color_preference = client_info["color_preferido"]
+        # user_brand_preference = client_info["marcas_favoritas"]
+        # user_size_preference = client_info["talla"]
 
-        # Crea un perfil de usuario de ejemplo (puedes adaptarlo según tus necesidades)
-        user_profile = [user_gender. user_age,
-                        user_style_preference,
-                        user_color_preference,
-                        user_brand_preference,
-                        user_size_preference,
-                        ]
+        # # Crea un perfil de usuario de ejemplo (puedes adaptarlo según tus necesidades)
+        # user_profile = [user_gender. user_age,
+        #                 user_style_preference,
+        #                 user_color_preference,
+        #                 user_brand_preference,
+        #                 user_size_preference,
+        #                 ]
+
+        print(product_instance.create_product_profiles(id_client))
 
     except Exception as e:
         print("An error occurred:", e)

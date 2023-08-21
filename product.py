@@ -5,7 +5,7 @@ from client import Client
 
 class ProductProfileBasedContent:
     def __init__(self, product_id, product_name, description, price, category, brand,
-                 size, favorite, total_clicks, average_rating, color, cliente_info):
+                 size, favorite, total_clicks, average_rating, color):
         self.product_id = product_id
         self.product_name = product_name
         self.description = description
@@ -17,7 +17,6 @@ class ProductProfileBasedContent:
         self.total_clicks = total_clicks
         self.average_rating = average_rating
         self.color = color
-        self.cliente_info = cliente_info
 
 
 class Product:
@@ -45,8 +44,8 @@ class Product:
                     "brand": row[12],
                     "size": row[15],
                     "favorite": bool(row[17]),
-                    "clicks": row[18],
-                    "calificacion": row[19]
+                    "clicks": float(row[18]),
+                    "calification": float(row[19])
                 }
                 products.append(product_info)
 
@@ -69,18 +68,17 @@ class Product:
                 description = row["description"]
                 price = row["price"]
                 category = row["category"]
+                color = row["color"]
                 brand = row["brand"]
                 size = row["size"]
                 favorite = row["favorite"]
                 total_clicks = row["clicks"]
-                average_rating = row["calificacion"]
-                color = row["color"]
-                client_info = client_instance.get_client_info(id_client)
+                average_rating = row["calification"]
 
                 product_profiles.append(ProductProfileBasedContent(
                     product_id, product_name, description,
-                    price, category, brand,
-                    size, favorite, total_clicks, average_rating, color, client_info
+                    price, category, color, brand,
+                    size, favorite, total_clicks, average_rating,
                 ))
 
             return product_profiles

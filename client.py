@@ -8,7 +8,7 @@ class Client:
 
     def get_client_info(self, id_client):
         try:
-            query = "SELECT id, nombre, fecha_registro, genero, direccion, estilo_preferido, color_preferido. marcas_favoritas, talla FROM cliente WHERE id = ?"
+            query = "SELECT id, nombre, fecha_registro, genero, direccion, edad, estilo_preferido, color_preferido, marcas_favoritas, talla FROM cliente WHERE id = ?"
             client_data = self.db_connection.execute_query(
                 query, id_client)
 
@@ -29,6 +29,41 @@ class Client:
                 return client_info
 
             else:
+                return None
+
+        except Exception as e:
+            print("Error:", e)
+
+
+class UserProfileBuilder:
+    def __init__(self, id_client):
+        self.id_client = id_client
+        self.client_instance = Client()
+
+    def build_user_profile(self):
+        try:
+            client_info = self.client_instance.get_client_info(self.id_client)
+
+            if client_info:
+                user_gender = client_info["genero"]
+                user_age = client_info["edad"]
+                user_style_preference = client_info["estilo_preferido"]
+                user_color_preference = client_info["color_preferido"]
+                user_brand_preference = client_info["marcas_favoritas"]
+                user_size_preference = client_info["talla"]
+
+                user_profile = {
+                    "gender": user_gender,
+                    "age": user_age,
+                    "style_preference": user_style_preference,
+                    "color_preference": user_color_preference,
+                    "brand_preference": user_brand_preference,
+                    "size_preference": user_size_preference
+                }
+
+                return user_profile
+            else:
+                print("Client information not found.")
                 return None
 
         except Exception as e:
