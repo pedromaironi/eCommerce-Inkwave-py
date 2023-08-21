@@ -1,10 +1,19 @@
 class ContentBasedRecommendation:
     def __init__(self, product_profiles):
-        self.product_profiles = product_profiles  # Diccionario de perfiles de productos
+        # Diccionario de perfiles de productos
+        self.product_profiles = product_profiles
 
     def cosine_similarity(self, profile1, profile2):
-        # Implementa la función de similitud del coseno como se mostró en la respuesta anterior
-        # Puedes adaptarla según los atributos en tus perfiles y su formato
+        dot_product = sum(profile1[attr] * profile2[attr]
+                          for attr in profile1 if attr in profile2)
+        magnitude1 = math.sqrt(sum(profile1[attr] ** 2 for attr in profile1))
+        magnitude2 = math.sqrt(sum(profile2[attr] ** 2 for attr in profile2))
+
+        if magnitude1 == 0 or magnitude2 == 0:
+            return 0
+
+        similarity = dot_product / (magnitude1 * magnitude2)
+        return similarity
 
     def get_similar_products(self, target_product_id, num_recommendations):
         if target_product_id not in self.product_profiles:
@@ -23,9 +32,11 @@ class ContentBasedRecommendation:
         similarities.sort(key=lambda x: x[1], reverse=True)
 
         # Obtener las recomendaciones basadas en similitud
-        recommended_products = [product_id for product_id, _ in similarities[:num_recommendations]]
+        recommended_products = [product_id for product_id,
+                                _ in similarities[:num_recommendations]]
 
         return recommended_products
+
 
 # Crear una instancia de ContentBasedRecommendation con los perfiles de productos
 product_profiles = {
@@ -38,6 +49,7 @@ content_recommender = ContentBasedRecommendation(product_profiles)
 # Obtener recomendaciones para un producto específico
 target_product_id = "target_product_id"
 num_recommendations = 5
-recommendations = content_recommender.get_similar_products(target_product_id, num_recommendations)
+recommendations = content_recommender.get_similar_products(
+    target_product_id, num_recommendations)
 
 print("Recomendaciones basadas en contenido:", recommendations)
