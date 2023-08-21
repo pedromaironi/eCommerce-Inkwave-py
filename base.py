@@ -25,9 +25,9 @@ class DatabaseConnection:
             # Lanza un error personalizado
             raise Exception("Error al conectar a la base de datos")
 
-    def execute_query(self, query, id_usuario):
+    def execute_query(self, query, id_client):
         try:
-            self.cursor.execute(query, id_usuario)
+            self.cursor.execute(query, id_client)
             results = self.cursor.fetchall()
             return results
         except pyodbc.Error as e:

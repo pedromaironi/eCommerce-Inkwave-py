@@ -6,11 +6,11 @@ class Searches:
     def __init__(self):
         self.db_connection = DatabaseConnection()
 
-    def get_searches(self, id_usuario):
+    def get_searches(self, id_client):
         try:
             query = "SELECT id_cliente, termino_busqueda FROM Busquedas WHERE id_cliente = ?"
             busquedas_data = self.db_connection.execute_query(
-                query, id_usuario)
+                query, id_client)
 
             # Preprocesamiento de datos
             # Eliminar duplicados y normalizar términos de búsqueda
