@@ -1,22 +1,37 @@
 from product import Product
+from clicks import Clicks
+from client import Client
 from base import DatabaseConnection
+from sklearn.metrics.pairwise import cosine_similarity
 
 
-def generate_recommendations(id_usuario):
+def main(id_client):
     db_connection = DatabaseConnection()
     try:
-        clicks_instance = Product()
-        user_clicks = clicks_instance.create_product_profiles(id_usuario)
+        # Obtén los perfiles de productos y los datos de clicks
+        product_instance = Product()
+        click_instance = Clicks()
+        client_instance = Client()
 
-        recommendations = str(user_clicks)
-        for profile in user_clicks:
-            print("Product ID:", profile.product_id)
-            print("Product Name:", profile.product_name)
-            # print("Description:", profile.description)
-            # ... (imprime otros atributos)
-            print("Total Clicks:", profile.total_clicks)
-            print("Average Rating:", profile.average_rating)
-            print("-----------------------")
+        product_profiles = product_instance.create_product_profiles(id_client)
+        click_rates = click_instance.calculate_click_rates(id_client)
+
+        client_info = client_instance.get_client_info(id_client)
+        user_gender = client_info["genero"]
+        user_age = client_info['edad']
+        user_style_preference = client_info["estilo_preferido"]
+        user_color_preference = client_info["color_preferido"]
+        user_brand_preference = client_info["marcas_favoritas"]
+        user_size_preference = client_info["talla"]
+
+        # Crea un perfil de usuario de ejemplo (puedes adaptarlo según tus necesidades)
+        user_profile = [user_gender. user_age,
+                        user_style_preference,
+                        user_color_preference,
+                        user_brand_preference,
+                        user_size_preference,
+                        ]
+
     except Exception as e:
         print("An error occurred:", e)
         return "An error occurred while generating recommendations."
@@ -24,29 +39,12 @@ def generate_recommendations(id_usuario):
         db_connection.close()
 
 
-# Get the id_usuario from the command line
 if __name__ == "__main__":
     import sys
+    import numpy as np
 
     if len(sys.argv) > 1:
-        id_usuario = sys.argv[1]
-        recommendation = generate_recommendations(id_usuario)
-        print(recommendation)
+        id_client = sys.argv[1]
+        main(id_client)
     else:
-        print("Please provide an id_usuario as an argument.")
-
-
-# from recommendationEngine import RecommendationEngine
-
-# if __name__ == "__main__":
-#     import sys
-#     try:
-#         if len(sys.argv) > 1:
-#             id_client = sys.argv[1]
-#             recommendation_engine = RecommendationEngine()
-#             recommendations = recommendation_engine.generate_recommendations(
-#                 id_client)
-#             print("Recommendations:", recommendations)
-
-#     except Exception as e:
-#         print("An error occurred:", e)
+        print("Please provide an id_client as an argument.")

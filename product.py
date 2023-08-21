@@ -1,10 +1,11 @@
 from base import DatabaseConnection
 from clicks import Clicks
+from client import Client
 
 
-class ProductProfile:
+class ProductProfileBasedContent:
     def __init__(self, product_id, product_name, description, price, category, brand,
-                 size, favorite, total_clicks, average_rating):
+                 size, favorite, total_clicks, average_rating, color, cliente_info):
         self.product_id = product_id
         self.product_name = product_name
         self.description = description
@@ -15,6 +16,8 @@ class ProductProfile:
         self.favorite = favorite
         self.total_clicks = total_clicks
         self.average_rating = average_rating
+        self.color = color
+        self.cliente_info = cliente_info
 
 
 class Product:
@@ -57,6 +60,7 @@ class Product:
             click_rates_data = self.clicks_instance.calculate_click_rates(
                 id_client)
             product_data = self.get_all_products(id_client)
+            client_instance = Client()
 
             product_profiles = []
             for row in product_data:
@@ -70,11 +74,13 @@ class Product:
                 favorite = row["favorite"]
                 total_clicks = row["clicks"]
                 average_rating = row["calificacion"]
+                color = row["color"]
+                client_info = client_instance.get_client_info(id_client)
 
-                product_profiles.append(ProductProfile(
+                product_profiles.append(ProductProfileBasedContent(
                     product_id, product_name, description,
                     price, category, brand,
-                    size, favorite, total_clicks, average_rating
+                    size, favorite, total_clicks, average_rating, color, client_info
                 ))
 
             return product_profiles

@@ -24,6 +24,3 @@ class Likes:
 
         except Exception as e:
             print("Error:", e)
-
-        finally:
-            self.db_connection.close()
