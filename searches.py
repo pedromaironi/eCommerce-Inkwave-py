@@ -1,17 +1,16 @@
 from base import DatabaseConnection
 
 
-class searches:
-    db_connection = DatabaseConnection()
-    cursor = db_connection.cursor
+class Searches:
 
-    @staticmethod
-    def get_searches(id_usuario):
+    def __init__(self):
+        self.db_connection = DatabaseConnection()
+
+    def get_searches(self, id_usuario):
         try:
             query = "SELECT id_cliente, termino_busqueda FROM Busquedas WHERE id_cliente = ?"
-            cursor = conn.cursor()
-            cursor.execute(query, id_usuario)
-            busquedas_data = cursor.fetchall()
+            busquedas_data = self.db_connection.execute_query(
+                query, id_usuario)
 
             # Preprocesamiento de datos
             # Eliminar duplicados y normalizar términos de búsqueda
@@ -26,12 +25,11 @@ class searches:
                 user_searches[user_id].append(term)
 
             # Ahora tienes un diccionario 'user_searches' que mapea usuarios a sus búsquedas únicas
-            print(user_searches)
+            return user_searches
 
         except Exception as e:
             print("Error:", e)
 
         finally:
             # Cierra la conexión y el cursor al finalizar
-            cursor.close()
-            db_connection.close()
+            self.db_connection.close()
