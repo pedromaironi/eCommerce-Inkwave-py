@@ -24,6 +24,18 @@ class Product:
     def __init__(self):
         self.db_connection = DatabaseConnection()
         self.clicks_instance = Clicks()
+        self.color_mapping = {
+            "celeste": 1,
+            "negro": 2,
+            "blanco": 3,
+            "verde": 4,
+            "variado": 5,
+            "azul": 6,
+            "gris": 7,
+            "rojo": 8,
+            "beige": 9,
+            "rojo vino": 10
+        }
 
     def get_all_products(self, id_client):
         try:
@@ -39,13 +51,13 @@ class Product:
                     "price": row[3],
                     "image": row[4],
                     "stock": row[5],
-                    "category": row[7],
-                    "color": row[10],
-                    "brand": row[12],
-                    "size": row[15],
-                    "favorite": bool(row[17]),
+                    "category": row[6],
+                    "color": self.color_mapping.get(row[10], 0),
+                    "brand": row[11],
+                    "size": row[14],
+                    "favorite": (row[17]),
                     "clicks": float(row[18]),
-                    "calification": float(row[19])
+                    "calification": (row[19])
                 }
                 products.append(product_info)
 
@@ -72,7 +84,7 @@ class Product:
                 brand = row["brand"]
                 size = row["size"]
                 favorite = row["favorite"]
-                total_clicks = row["clicks"]
+                total_clicks = float(row["clicks"])
                 average_rating = row["calification"]
 
                 product_profiles.append(ProductProfileBasedContent(

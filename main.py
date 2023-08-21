@@ -1,8 +1,9 @@
 from product import Product
 from clicks import Clicks
-from client import Client
+from client import UserProfileBuilder, Client
 from base import DatabaseConnection
-from sklearn.metrics.pairwise import cosine_similarity
+from ContentBasedRecommender import ContentBasedRecommender
+import traceback
 
 
 def main(id_client):
@@ -12,31 +13,24 @@ def main(id_client):
         product_instance = Product()
         click_instance = Clicks()
         client_instance = Client()
+        profile_builder = UserProfileBuilder()
 
-        # product_profiles = product_instance.create_product_profiles(id_client)
-        # click_rates = click_instance.calculate_click_rates(id_client)
+        user_profile = profile_builder.build_user_profile(id_client)
 
-        # client_info = client_instance.get_client_info(id_client)
-        # user_gender = client_info["genero"]
-        # user_age = client_info['edad']
-        # user_style_preference = client_info["estilo_preferido"]
-        # user_color_preference = client_info["color_preferido"]
-        # user_brand_preference = client_info["marcas_favoritas"]
-        # user_size_preference = client_info["talla"]
+        product_profiles = product_instance.create_product_profiles(id_client)
 
-        # # Crea un perfil de usuario de ejemplo (puedes adaptarlo según tus necesidades)
-        # user_profile = [user_gender. user_age,
-        #                 user_style_preference,
-        #                 user_color_preference,
-        #                 user_brand_preference,
-        #                 user_size_preference,
-        #                 ]
+        recommender = ContentBasedRecommender(product_profiles)
 
-        print(product_instance.create_product_profiles(id_client))
+        recommendations = recommender.recommend_products(user_profile)
 
+        print("Product recommendations:")
+        for product_id, similarity in recommendations:
+            print(f"Product ID: {product_id}, Similarity: {similarity}")
+
+        print(product_profiles)
     except Exception as e:
         print("An error occurred:", e)
-        return "An error occurred while generating recommendations."
+        return traceback.print_exc()
     finally:
         db_connection.close()
 
