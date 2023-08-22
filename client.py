@@ -9,7 +9,7 @@ class Client:
 
     def get_client_info(self, id_client):
         try:
-            query = "SELECT id, nombre, fecha_registro, genero, direccion, edad, color_preferido, marca_favorita, talla_favorita FROM cliente WHERE id = ?"
+            query = "SELECT id, nombre, fecha_registro, genero, direccion, edad, color_preferido, marca_favorita, talla_favorita, precio_preferido, categoria_preferida FROM cliente WHERE id = ?"
             client_data = self.db_connection.execute_query(
                 query, id_client)
 
@@ -24,7 +24,9 @@ class Client:
                     "edad": client_data[0][5],
                     "color_preferido": client_data[0][6],
                     "marca_favorita": client_data[0][7],
-                    "talla_favorita": client_data[0][8]
+                    "talla_favorita": client_data[0][8],
+                    "precio_preferido": client_data[0][9],
+                    "categoria_preferida": client_data[0][10]
                 }
                 return client_info
 
@@ -39,26 +41,31 @@ class Client:
 class UserProfileBuilder:
     def __init__(self):
         self.client_instance = Client()
+        self.user_profile = []
 
     def build_user_profile(self, id_client):
         try:
             client_info = self.client_instance.get_client_info(id_client)
 
             if client_info:
-                user_gender = client_info["genero"]
-                user_age = client_info["edad"]
+                # user_gender = client_info["genero"]
+                # user_age = client_info["edad"]
                 user_color_preference = client_info["color_preferido"]
                 user_brand_preference = client_info["marca_favorita"]
                 user_size_preference = client_info["talla_favorita"]
-                user_profile = {
-                    "gender": user_gender,
-                    "age": user_age,
-                    "color_preference": user_color_preference,
-                    "brand_preference": user_brand_preference,
-                    "size_preference": user_size_preference
-                }
+                user_price_preference = client_info["precio_preferido"]
+                user_category_preference = client_info["categoria_preferida"]
+                self.user_profile = [
+                    # "gender": user_gender,
+                    # "age": user_age,
+                    user_color_preference,
+                    user_brand_preference,
+                    user_size_preference,
+                    user_price_preference,
+                    user_category_preference,
+                ]
 
-                return user_profile
+                return self.user_profile
             else:
                 print("Client information not found.")
                 return None

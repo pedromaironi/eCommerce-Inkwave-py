@@ -27,9 +27,14 @@ class DatabaseConnection:
 
     def execute_query(self, query, id_client):
         try:
-            self.cursor.execute(query, id_client)
-            results = self.cursor.fetchall()
-            return results
+            if (id_client == 0):
+                self.cursor.execute(query)
+                results = self.cursor.fetchall()
+                return results
+            else:
+                self.cursor.execute(query, id_client)
+                results = self.cursor.fetchall()
+                return results
         except pyodbc.Error as e:
             # Lanza un error personalizado
             raise Exception("Error al ejecutar la consulta")
