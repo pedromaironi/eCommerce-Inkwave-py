@@ -36,3 +36,20 @@ class Clicks:
 
         except Exception as e:
             print("Error:", e)
+
+    def get_user_clicks(self, id_client):
+        try:
+            query = """ SELECT TOP 1 id_producto, cantidad_clicks
+                        FROM clicks
+                        WHERE id_cliente = ?
+                        ORDER BY cantidad_clicks DESC;
+                    """
+            clicks_data = self.db_connection.execute_query(query, id_client)
+
+            # Extract product IDs from clicks data
+            user_click_history = [click[0] for click in clicks_data]
+            return user_click_history
+
+        except Exception as e:
+            print("Error:", e)
+            return []

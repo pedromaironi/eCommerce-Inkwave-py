@@ -1,4 +1,7 @@
 from base import DatabaseConnection
+from clicks import Clicks
+from product import Product
+import traceback
 import traceback
 
 
@@ -41,6 +44,7 @@ class Client:
 class UserProfileBuilder:
     def __init__(self):
         self.client_instance = Client()
+        self.product_instance = Product()
         self.user_profile = []
 
     def build_user_profile(self, id_client):
@@ -69,6 +73,51 @@ class UserProfileBuilder:
             else:
                 print("Client information not found.")
                 return None
+
+        except Exception as e:
+            print("Error:", e)
+
+    def build_user_profile_clicks(self, id_client):
+        try:
+            clicks_instance = Clicks()
+            client_info = self.client_instance.get_client_info(id_client)
+
+            if client_info:
+                user_id = id_client
+                user_clicks_history = clicks_instance.get_user_clicks(
+                    id_client)
+                self.user_profile = [
+                    user_id,
+                    user_clicks_history
+                ]
+
+                return self.user_profile
+            else:
+                print("Client information not found.")
+                return None
+
+        except Exception as e:
+            print("Error:", e)
+
+    def recommend_products_based_on_clicks(self, id_client, num_recommendations=5):
+        try:
+            clicks_instance = Clicks()
+            most_clicked_product_id = clicks_instance.get_user_clicks(
+                id_client)
+
+            if most_clicked_product_id:
+                most_clicked_product_category = self.product_instance.get_product_info_list(
+                    most_clicked_product_id)['categoria']
+
+                recommendations = self.product_instance.get_products_by_category(
+                    most_clicked_product_category, num_recommendations)
+
+                recommended_product_ids = [product['id']
+                                           for product in recommendations]
+                return recommended_product_ids
+            else:
+                print("User click history not found.")
+                return []
 
         except Exception as e:
             print("Error:", e)

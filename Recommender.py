@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 
-class ContentBasedRecommender:
+class Recommender:
     def __init__(self, product_profiles):
         self.product_profiles = product_profiles
         self.product_features = self._create_product_features()
@@ -49,7 +49,6 @@ class ContentBasedRecommender:
                 user_profile, product_feature_zscore)
             similarity_scores_zscore.append(similarity_zscore)
 
-        print(user_profile.index)
         sorted_indices_minmax = np.argsort(similarity_scores_minmax)[::-1]
         recommendations_minmax = [(self.product_profiles[idx].product_id, similarity_scores_minmax[idx])
                                   for idx in sorted_indices_minmax

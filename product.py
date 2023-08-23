@@ -1,6 +1,6 @@
 from base import DatabaseConnection
 from clicks import Clicks
-from client import Client
+import traceback
 
 
 class ProductProfileBasedContent:
@@ -11,6 +11,12 @@ class ProductProfileBasedContent:
         self.brand = brand
         self.size = size
         self.color = color
+
+
+class ProductProfileClicks:
+    def __init__(self, product_id, clicks):
+        self.product_id = product_id
+        self.clicks = clicks
 
 
 class Product:
@@ -60,6 +66,37 @@ class Product:
         except Exception as e:
             print("Error:", e)
 
+    def get_product_info_list(self, product_id):
+        try:
+            query = """
+            SELECT p.id, p.nombre, c.nombre AS categoria, m.nombre AS marca, p.precio, cc.cantidad_clicks
+            FROM producto AS p
+            JOIN categoria AS c ON p.id_categoria = c.id
+            JOIN detalleProducto AS dp ON p.id = dp.id_producto
+            JOIN marca AS m ON dp.id_marca = m.id
+			JOIN Clicks as cc ON p.id = cc.id_producto
+            where p.id = ?
+            """
+            product_data = self.db_connection.execute_query(query, product_id)
+
+            # Preprocess data
+            if product_data:
+                product_info = {
+                    "id": product_data[0][0],
+                    "nombre": product_data[0][1],
+                    "categoria": product_data[0][2],
+                    "marca": product_data[0][3],
+                    "precio": product_data[0][4],
+                    "cantidad_clicks": float(product_data[0][5])
+                }
+                return product_info
+            else:
+                return None
+
+        except Exception as e:
+            print("Error:", e)
+            traceback.print_exc()  # Print the traceback information
+
     def create_product_profiles(self, id_client):
         try:
             click_rates_data = self.clicks_instance.calculate_click_rates(
@@ -82,3 +119,53 @@ class Product:
             return product_profiles
         except Exception as e:
             print("Error:", e)
+
+    def create_product_clicks_profile(self, id_client):
+        try:
+            product_data = self.get_all_products(id_client)
+
+            product_profiles = []
+            for row in product_data:
+                product_id = row["product_id"]
+                clicks = row["clicks"]
+
+                product_profiles.append(
+                    ProductProfileClicks(product_id, clicks))
+            return product_profiles
+        except Exception as e:
+            print("Error:", e)
+
+    def get_products_by_category(self, category_name, num_products=5):
+        try:
+            query = """
+            SELECT p.id, p.nombre, c.nombre AS categoria, m.nombre AS marca, p.precio, cc.cantidad_clicks
+            FROM producto AS p
+            JOIN categoria AS c ON p.id_categoria = c.id
+            JOIN detalleProducto AS dp ON p.id = dp.id_producto
+            JOIN marca AS m ON dp.id_marca = m.id
+            JOIN Clicks as cc ON p.id = cc.id_producto
+            WHERE c.nombre = ?
+            ORDER BY cc.cantidad_clicks DESC
+            """
+
+            product_data = self.db_connection.execute_query(
+                query, (category_name))
+
+            # Preprocess data
+            product_list = []
+            for row in product_data:
+                product_info = {
+                    "id": row[0],
+                    "nombre": row[1],
+                    "categoria": row[2],
+                    "marca": row[3],
+                    "precio": row[4],
+                    "cantidad_clicks": row[5]
+                }
+                product_list.append(product_info)
+
+            return product_list
+
+        except Exception as e:
+            print("Error:", e)
+            traceback.print_exc()  # Print the traceback information
