@@ -39,5 +39,21 @@ class DatabaseConnection:
             # Lanza un error personalizado
             raise Exception("Error al ejecutar la consulta")
 
+    def execute_large_query(self, query, params=None):
+        try:
+            if params is None:
+                self.cursor.execute(query)
+            else:
+                self.cursor.execute(query, params)
+
+            results = self.cursor.fetchall()
+            return results
+        except pyodbc.Error as e:
+            # Lanza un error personalizado
+            raise Exception("Error al ejecutar la consulta")
+        except Exception as ex:
+            print("Error:", ex)
+        raise ex
+
     def close(self):
         self.conn.close()

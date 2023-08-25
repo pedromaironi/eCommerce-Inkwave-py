@@ -59,14 +59,14 @@ class UserProfileBuilder:
                 user_size_preference = client_info["talla_favorita"]
                 user_price_preference = client_info["precio_preferido"]
                 user_category_preference = client_info["categoria_preferida"]
-                self.user_profile = [
-                    # "gender": user_gender,
+                self.user_profile = [{                    # "gender": user_gender,
                     # "age": user_age,
-                    user_color_preference,
-                    user_brand_preference,
-                    user_size_preference,
-                    user_price_preference,
-                    user_category_preference,
+                    "color": user_color_preference,
+                    'brand': user_brand_preference,
+                    'size': user_size_preference,
+                    'price': user_price_preference,
+                    'category': user_category_preference,
+                }
                 ]
 
                 return self.user_profile

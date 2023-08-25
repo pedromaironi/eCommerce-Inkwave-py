@@ -30,10 +30,18 @@ class ClicksContentRecommendation:
             brands_instance = Brands()
             profile_builder = UserProfileBuilder()
 
-            user_profile = profile_builder.recommend_products_based_on_clicks(
+            recommendation = profile_builder.recommend_products_based_on_clicks(
                 id_client)
 
-            print(user_profile)
+            seen_recommendations = set()
+            unique_recommendations = []
+
+            for product_id in recommendation:
+                if product_id not in seen_recommendations:
+                    unique_recommendations.append(product_id)
+                    seen_recommendations.add(product_id)
+
+            print(unique_recommendations)
 
         except Exception as e:
             print("An error occurred:", e)
